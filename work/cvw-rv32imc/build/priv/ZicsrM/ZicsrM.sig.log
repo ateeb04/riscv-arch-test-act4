@@ -1,0 +1,6 @@
+using /home/lpt-10x/Documents/WORK/act4/work/cvw-rv32imc/build/priv/ZicsrM/ZicsrM.sig for test-signature output.
+ELF Entry @ 0x80000000
+HTIF located at 0x80001000
+begin_signature: 0x80001010
+end_signature: 0x80001028
+SUCCESS

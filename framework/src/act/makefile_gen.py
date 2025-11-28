@@ -36,7 +36,6 @@ def gen_compile_targets(
     sig_elf = build_dir / test_name.with_suffix(".sig.elf")
     sig_file = build_dir / test_name.with_suffix(".sig")
     result_file = build_dir / test_name.with_suffix(".results")
-    sig_trace_file = build_dir / test_name.with_suffix(".sig.trace")
     sig_log_file = build_dir / test_name.with_suffix(".sig.log")
     final_elf = elf_dir / test_name.with_suffix(".elf")
 
@@ -45,6 +44,14 @@ def gen_compile_targets(
     flen = test_metadata.flen
     test_path = test_metadata.test_path
     ref_model_sig_flags = config.ref_model_type.signature_flags.format(sig_file=sig_file, granularity=int(xlen / 8))
+
+    # BEFORE the return statement
+    if config.objdump_exe is not None:
+        objdump_str = (
+            f"\n\t{config.objdump_exe} -Stsxd -M no-aliases,numeric \\\n\t\t{final_elf} \\\n\t\t> {final_elf}.objdump\n"
+        )
+    else:
+        objdump_str = "# skipping objdump generation\n"
 
     # Generate Makefile targets
     return (
@@ -56,16 +63,9 @@ def gen_compile_targets(
         f"\t\t-march={march} -mabi={mabi} -DSIGNATURE -DXLEN={xlen} -DFLEN={flen} \\\n"
         f"\t\t{test_path}\n"
         f"\n"
-        # Objdump
-        f"{
-            f'\n\t{config.objdump_exe} -Stsxd -M no-aliases,numeric \\\n\t\t{sig_elf} \\\n\t\t> {sig_elf}.objdump\n'
-            if config.objdump_exe is not None
-            else '# skipping objdump generation\n'
-        }"
         "# Generate signature file\n"
         f"{sig_file}: {sig_elf}\n"
-        f"\t{config.ref_model_exe} --trace-all \\\n"
-        f"\t\t--trace-output {sig_trace_file} \\\n"
+        f"\t{config.ref_model_exe} \\\n"
         f"\t\t--config {config.dut_include_dir}/sail.json \\\n"  # TODO: don't hardcode sail config file
         f"\t\t{ref_model_sig_flags} \\\n"
         f"\t\t{sig_elf} \\\n"
@@ -73,7 +73,7 @@ def gen_compile_targets(
         f"\n"
         f"# Modify sig file for inclusion in assembly\n"
         f"{result_file}: {sig_file}\n"
-        f"\tuv run sig_modify {sig_file} {xlen}\n"
+        f"\tPYTHONPATH=. python3 ../../../riscv-arch-test/framework/src/act/sig_modify.py\n"
         f"\n"
         "# Final ELF target\n"
         f"{final_elf}: {sig_elf} {result_file} | {final_elf.parent}\n"
@@ -83,11 +83,9 @@ def gen_compile_targets(
         f'\t\t-DSIGNATURE_FILE=\\"{result_file}\\" \\\n'
         f"\t\t{test_path}\n"
         # Objdump
-        f"{
-            f'\n\t{config.objdump_exe} -Stsxd -M no-aliases,numeric \\\n\t\t{final_elf} \\\n\t\t> {final_elf}.objdump\n'
-            if config.objdump_exe is not None
-            else '# skipping objdump generation\n'
-        }"
+        # f"{ f'\n\t{config.objdump_exe} -Stsxd -M no-aliases,numeric \\\n\t\t{final_elf} \\\n\t\t> {final_elf}.objdump\n' if config.objdump_exe is not None else '# skipping objdump generation\n' }"
+        # then, in the return string, include:
+        f"{objdump_str}"
     )
 
 

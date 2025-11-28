@@ -14,18 +14,14 @@
 
 #define RVMODEL_HALT_PASS  \
   li x1, 1                ;\
-  la t0, tohost           ;\
-  write_tohost_pass:      ;\
-    sw x1, 0(t0)          ;\
-    sw x0, 4(t0)          ;\
-    j write_tohost_pass   ;\
+  write_tohost:           ;\
+    sw x1, tohost, t0     ;\
+    j write_tohost        ;\
 
 #define RVMODEL_HALT_FAIL \
   li x1, 3                ;\
-  la t0, tohost           ;\
   write_tohost_fail:      ;\
-    sw x1, 0(t0)          ;\
-    sw x0, 4(t0)          ;\
+    sw x1, tohost, t0     ;\
     j write_tohost_fail   ;\
 
 #define RVMODEL_BOOT

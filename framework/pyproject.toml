@@ -22,7 +22,7 @@ dependencies = [
 act = "act.act:main"
 sail-to-rvvi = "act.sail_to_rvvi:main"
 coverreport = "act.coverreport:main"
-sig_modify = "act.sig_modify:main"
+sig_modify = "/home/lpt-10x/Documents/WORK/act4/riscv-arch-test-cvw/framework/src/act/sig_modify:main"
 merge-summaries = "act.merge_summaries:main"
 
 ##### BUILD #####

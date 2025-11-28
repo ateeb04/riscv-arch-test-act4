@@ -18,7 +18,7 @@
 __pycache__
 
 # Work directories
-work/
+# work/
 work-ref/
 
 # Don't check in generated files for now

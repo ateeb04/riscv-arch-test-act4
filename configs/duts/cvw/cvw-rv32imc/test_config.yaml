@@ -1,8 +1,10 @@
 name: cvw-rv32imc
-compiler_exe: /opt/riscv/bin/riscv64-unknown-elf-gcc # executable name on $PATH or full path to executable
-objdump_exe: /opt/riscv/bin/riscv64-unknown-elf-objdump # executable name on $PATH or full path to executable, optional
-ref_model_exe: /opt/riscv/bin/sail_riscv_sim # executable name on $PATH or full path to executable
-ref_model_type: sail # sail or spike
+# name: cv32e20-rv32imc
+
+# udb_config: cv32e20-rv32imc.yaml
 udb_config: cvw-rv32imc.yaml
+compiler_exe: "/home/lpt-10x/riscv32/bin/riscv32-unknown-elf-gcc"
+ref_model_type: "sail"
+ref_model_exe: "/home/lpt-10x/Documents/sail/sail-riscv-Linux-x86_64/bin/sail_riscv_sim"
 linker_script: link.ld
 dut_include_dir: . # Directory containing DUT specific model_test.h header

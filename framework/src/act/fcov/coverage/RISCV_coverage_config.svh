@@ -254,9 +254,6 @@
 `ifdef EXCEPTIONSHV_COVERAGE
   `include "ExceptionsHV_coverage.svh"
 `endif
-`ifdef EXCEPTIONSVF_COVERAGE
-  `include "ExceptionsVF_coverage.svh"
-`endif
 `ifdef EXCEPTIONSZC_COVERAGE
   `include "ExceptionsZc_coverage.svh"
 `endif
